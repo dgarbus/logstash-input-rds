@@ -53,8 +53,10 @@ class LogStash::Inputs::Rds < LogStash::Inputs::Base
                 queue << event
               end
             end
-            more = response[:additional_data_pending]
+            more = (marker != response[:marker])
             marker = response[:marker]
+            @logger.debug "#{@log_file_name} marker value is: #{marker}, additional_data_pending value is: #{response[:additional_data_pending]}"
+            @logger.debug "#{@log_file_name} last written at value is: #{logfile.last_written}"
           end
           @sincedb.write (filename2datetime logfile.name)
         end
